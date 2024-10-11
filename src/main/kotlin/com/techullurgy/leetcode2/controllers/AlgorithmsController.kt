@@ -66,17 +66,19 @@ class AlgorithmsController(
             testcases = executableTestcases.map { it.toProblemTestcase() }
         )
 
-        RunResultResponse(
-            problemId = problemNo,
-            results = results.map { r ->
-                TestcaseResultDTO(
-                    testcase = executableTestcases.first { it.testcaseNo == r.testcase.id },
-                    expectedResult = r.expectedResult,
-                    yourResult = r.yourResult,
-                    stdout = r.stdout,
-                    result = r.result
-                )
-            }
+        return ResponseEntity.ok(
+            RunResultResponse(
+                problemId = problemNo,
+                results = results.map { r ->
+                    TestcaseResultDTO(
+                        testcase = executableTestcases.first { it.testcaseNo == r.testcase.id },
+                        expectedResult = r.expectedResult,
+                        yourResult = r.yourResult,
+                        stdout = r.stdout,
+                        result = r.result
+                    )
+                }
+            )
         )
     }
 }
