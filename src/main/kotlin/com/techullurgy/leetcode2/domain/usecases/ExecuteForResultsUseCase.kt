@@ -10,7 +10,7 @@ class ExecuteForResultsUseCase(
     private val executeDockerImage: ExecuteDockerImageUseCase
 ) {
     operator fun invoke(language: ProgrammingLanguage, imageName: String, testcases: List<ProblemTestcase>): Array<CodeExecutionResult> {
-        val results = Array<CodeExecutionResult>(testcases.size) { CodeExecutionResult.Temporary }
+        val results = Array<CodeExecutionResult>(testcases.size) { CodeExecutionResult.NotExecuted }
 
         for (index in testcases.indices) {
             val result = executeDockerImage(language, imageName, index + 1)

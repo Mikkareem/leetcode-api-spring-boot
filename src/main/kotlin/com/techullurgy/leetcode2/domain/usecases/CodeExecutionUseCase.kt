@@ -37,6 +37,6 @@ class CodeExecutionUseCase(
 
         deleteDockerFile(inputFilePath)
 
-        return results.toList().filter { it !is CodeExecutionResult.Temporary }
+        return results.toList().filter { it !is CodeExecutionResult.NotExecuted }
     }
 }
