@@ -27,6 +27,11 @@ data class Problem(
     @JoinColumn(name = "file_content_id")
     val fileContent: FileContent,
 
-    @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val testcases: MutableList<Testcase> = mutableListOf()
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "problem_id")
+    val testcases: MutableList<Testcase> = mutableListOf(),
+
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "problem_id")
+    val testcaseFormats: MutableList<TestcaseFormat> = mutableListOf()
 )

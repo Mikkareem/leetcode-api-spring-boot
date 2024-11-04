@@ -10,5 +10,5 @@ data class ProblemDTO(
     val description: String,
     val preferredSnippet: String,
     val preferredLanguage: ProgrammingLanguage,
-    val sampleTestcases: List<TestcaseDTO>
+    val sampleTestcases: List<TestcaseModel>
 )

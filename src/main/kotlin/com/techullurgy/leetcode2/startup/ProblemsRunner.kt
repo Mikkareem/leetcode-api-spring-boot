@@ -16,7 +16,7 @@ class ProblemsRunner(
     private val problemsRepository: ProblemsRepository,
 ): CommandLineRunner {
     override fun run(vararg args: String?) {
-        problemsRepository.saveAll(problems)
+//        problemsRepository.saveAll(problems)
     }
 }
 
@@ -24,7 +24,7 @@ private val problems = listOf(
     Problem(
         title = "Multiply by 2",
         description = "<p>Given integer <code>n</code>, Return a number which is multiplied by 2 with <code>n</code></p>",
-        difficulty = Difficulty.EASY,
+        difficulty = Difficulty.Easy,
         snippet = Snippet(
             c = "",
             cpp = "",
@@ -111,33 +111,33 @@ private val problems = listOf(
             javascriptReplaceStr = ""
         )
     ).apply {
-        val testcases = listOf(
-            Testcase(testcaseNo = 1, isHidden = false, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "2", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-            Testcase(testcaseNo = 2, isHidden = false, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "2", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-            Testcase(testcaseNo = 3, isHidden = false, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "3", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-            Testcase(testcaseNo = 4, isHidden = true, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "4", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-            Testcase(testcaseNo = 5, isHidden = true, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "5", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-            Testcase(testcaseNo = 6, isHidden = true, problem = this).apply {
-                details.clear()
-                details.add(TestcaseInput(inputName = "stocks", inputValue = "6", typeMask = TestcaseType.SINGLE_TYPE, testcase = this))
-            },
-        )
-        this.testcases.clear()
-        this.testcases.addAll(testcases)
+//        val testcases = listOf(
+//            Testcase(testcaseNo = 1, isHidden = false).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "2", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//            Testcase(testcaseNo = 2, isHidden = false).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "2", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//            Testcase(testcaseNo = 3, isHidden = false).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "3", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//            Testcase(testcaseNo = 4, isHidden = true).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "4", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//            Testcase(testcaseNo = 5, isHidden = true).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "5", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//            Testcase(testcaseNo = 6, isHidden = true).apply {
+//                inputs.clear()
+//                inputs.add(TestcaseInput(inputName = "stocks", inputValue = "6", typeMask = TestcaseType.SINGLE_TYPE))
+//            },
+//        )
+//        this.testcases.clear()
+//        this.testcases.addAll(testcases)
     }
 )

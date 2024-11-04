@@ -1,18 +1,15 @@
 package com.techullurgy.leetcode2.controllers
 
 import com.techullurgy.leetcode2.data.entities.LeetcodeUser
-import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
-import com.techullurgy.leetcode2.domain.mappers.toProblemListItem
 import com.techullurgy.leetcode2.data.repositories.ProblemsRepository
 import com.techullurgy.leetcode2.data.repositories.SubmissionsRepository
 import com.techullurgy.leetcode2.data.repositories.UsersRepository
 import com.techullurgy.leetcode2.domain.mappers.toProblemDTO
+import com.techullurgy.leetcode2.domain.mappers.toProblemListItem
 import com.techullurgy.leetcode2.domain.mappers.toProblemTestcase
 import com.techullurgy.leetcode2.domain.mappers.toSubmissionDTO
-import com.techullurgy.leetcode2.domain.model.ProblemTestcase
-import com.techullurgy.leetcode2.domain.parsers.testcases.TestcaseType
+import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import com.techullurgy.leetcode2.domain.services.CodeExecutionService
-import com.techullurgy.leetcode2.network.models.ProblemListItem
 import com.techullurgy.leetcode2.network.models.TestcaseResultDTO
 import com.techullurgy.leetcode2.network.requests.CodeRequest
 import com.techullurgy.leetcode2.network.responses.ProblemByIdResponse
@@ -71,7 +68,7 @@ class AlgorithmsController(
                 problemId = problemNo,
                 results = results.map { r ->
                     TestcaseResultDTO(
-                        testcase = executableTestcases.first { it.testcaseNo == r.testcase.id },
+                        testcase = executableTestcases.first { it.id == r.testcase.id },
                         expectedResult = r.expectedResult,
                         yourResult = r.yourResult,
                         stdout = r.stdout,

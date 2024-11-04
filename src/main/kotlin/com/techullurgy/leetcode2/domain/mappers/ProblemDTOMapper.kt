@@ -3,8 +3,8 @@ package com.techullurgy.leetcode2.domain.mappers
 import com.techullurgy.leetcode2.data.entities.Problem
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import com.techullurgy.leetcode2.network.models.ProblemDTO
-import com.techullurgy.leetcode2.network.models.TestcaseDTO
-import com.techullurgy.leetcode2.network.models.TestcaseInputDTO
+import com.techullurgy.leetcode2.network.models.TestcaseInputModel
+import com.techullurgy.leetcode2.network.models.TestcaseModel
 
 fun Problem.toProblemDTO(language: ProgrammingLanguage) = ProblemDTO(
     problemNo = problemNo,
@@ -19,13 +19,14 @@ fun Problem.toProblemDTO(language: ProgrammingLanguage) = ProblemDTO(
         ProgrammingLanguage.Python -> snippet.python
         ProgrammingLanguage.Javascript -> snippet.javascript
     },
-    sampleTestcases = testcases.filter { !it.isHidden }.map {
-        TestcaseDTO(
-            testcaseNo = it.testcaseNo,
-            testcase = it.details.map {
-                TestcaseInputDTO(
-                    name = it.inputName,
-                    value = it.inputValue
+    sampleTestcases = testcases.filter { !it.isHidden }.mapIndexed { index, it ->
+        TestcaseModel(
+            id = it.testcaseId,
+            isHidden = it.isHidden,
+            inputs = it.inputs.mapIndexed { index, it ->
+                TestcaseInputModel(
+                    value = it.value,
+                    details = it.format.toTestcaseInputDetails()
                 )
             }
         )
