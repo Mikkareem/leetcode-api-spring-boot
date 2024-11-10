@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -30,6 +31,10 @@ class AlgorithmsController(
     private val userRepository: UsersRepository,
     private val codeExecutionService: CodeExecutionService
 ) {
+
+    data class SnippetResponse(
+        val snippet: String
+    )
 
     @GetMapping("/problems")
     fun getAllProblemsForTheUser(): ResponseEntity<ProblemsListResponse> {
@@ -49,6 +54,24 @@ class AlgorithmsController(
         return ResponseEntity.ok(ProblemByIdResponse(problem, submissions, user))
     }
 
+    @GetMapping("/problem/{problemNo}/snippets")
+    fun getSnippet(
+        @PathVariable("problemNo") problemNo: Int,
+        @RequestParam("language", required = true) language: ProgrammingLanguage
+    ): ResponseEntity<SnippetResponse> {
+        val snippet = problemRepository.findById(problemNo).get().snippet
+
+        val resultantSnippet = when(language) {
+            ProgrammingLanguage.C -> snippet.c
+            ProgrammingLanguage.Cpp -> snippet.cpp
+            ProgrammingLanguage.Java -> snippet.java
+            ProgrammingLanguage.Python -> snippet.python
+            ProgrammingLanguage.Javascript -> snippet.javascript
+        }
+
+        return ResponseEntity.ok(SnippetResponse(resultantSnippet))
+    }
+
     @PostMapping("/problem/{problemNo}/run")
     fun runCodeForTheProblemForTheUser(@PathVariable("problemNo") problemNo: Int, @RequestBody codeRequest: CodeRequest): ResponseEntity<RunResultResponse> {
         val userId = "laksd9832kjshkd"
@@ -62,6 +85,16 @@ class AlgorithmsController(
             language = codeRequest.language,
             testcases = executableTestcases.map { it.toProblemTestcase() }
         )
+
+//        val result2 = codeRequest.sampleTestcases.mapIndexed { index, it ->
+//            TestcaseResult(
+//                testcase = it.toProblemTestcase(),
+//                expectedResult = "${index + Random.nextInt()}",
+//                yourResult = "${index + Random.nextInt()}",
+//                stdout = "",
+//                result = CodeSubmissionResult.Accepted
+//            )
+//        }
 
         return ResponseEntity.ok(
             RunResultResponse(

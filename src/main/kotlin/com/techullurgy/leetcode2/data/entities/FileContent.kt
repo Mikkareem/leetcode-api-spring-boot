@@ -12,7 +12,7 @@ data class FileContent(
     val id: Int = 0,
     @Column(columnDefinition = "TEXT")
     val c: String,
-    val cReplaceStr: String,
+    val creplaceStr: String,
     @Column(columnDefinition = "TEXT")
     val cpp: String,
     val cppReplaceStr: String,

@@ -19,7 +19,7 @@ class GenerateInputFileUseCase(
         val problem = problemsRepository.findById(problemId).get()
 
         val replaceableString = when(language) {
-            ProgrammingLanguage.C -> problem.fileContent.cReplaceStr
+            ProgrammingLanguage.C -> problem.fileContent.creplaceStr
             ProgrammingLanguage.Cpp -> problem.fileContent.cppReplaceStr
             ProgrammingLanguage.Java -> problem.fileContent.javaReplaceStr
             ProgrammingLanguage.Python -> problem.fileContent.pythonReplaceStr

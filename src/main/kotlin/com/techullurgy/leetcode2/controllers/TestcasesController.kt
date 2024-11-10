@@ -42,15 +42,15 @@ class TestcasesController(
         return ResponseEntity.ok(problem.testcases.map { it.toTestcaseModel() })
     }
 
-    @GetMapping("/formats/{tid}")
+    @GetMapping("/{tid}")
     fun getTestcaseForProblem(
         @PathVariable("pid") problemId: String,
         @PathVariable("tid") testcaseId: String
-    ): ResponseEntity<Testcase> {
+    ): ResponseEntity<TestcaseModel> {
         val problem = problemsRepository.findById(Integer.parseInt(problemId)).getOrNull() ?: return ResponseEntity.notFound().build()
         val testcase = problem.testcases.firstOrNull { it.testcaseId == testcaseId.toLong() } ?: return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(testcase)
+        return ResponseEntity.ok(testcase.toTestcaseModel())
     }
 
     @Transactional

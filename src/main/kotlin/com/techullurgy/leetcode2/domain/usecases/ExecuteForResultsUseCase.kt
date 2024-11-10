@@ -18,10 +18,10 @@ class ExecuteForResultsUseCase(
             if (result.first) {
                 results[index] = CodeExecutionResult.Accepted
             } else {
-                if (result.second.equals(CodeExecutionResult.TimeLimitExceeded.name)) {
+                if (result.second == CodeExecutionResult.TimeLimitExceeded.name) {
                     results[index] = CodeExecutionResult.TimeLimitExceeded
                     break
-                } else if (result.second.equals("")) {
+                } else if (result.second == "") {
                     results[index] = CodeExecutionResult.WrongAnswer
                 } else {
                     results[index] = CodeExecutionResult.RuntimeError(result.second)

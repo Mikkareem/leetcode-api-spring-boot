@@ -1,6 +1,7 @@
 package com.techullurgy.leetcode2.domain.parsers.testcases
 
 import com.techullurgy.leetcode2.domain.model.ProblemTestcase
+import com.techullurgy.leetcode2.domain.parsers.utils.RegexPattern
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
@@ -15,60 +16,64 @@ class DefaultTestcaseParserStrategy : TestcaseParserStrategy() {
             val currentMask = testcase.masks[index]
 
             if(is2DList(currentMask)) {
-                if(isStringType(currentMask)) {
-                    val twoDArrayOfSingleRegex = Regex("""(\[(?:-?\d+(?:,\s*-?\d+)*)*])""")
-                    builder.append(twoDArrayOfSingleRegex.findAll(currentInput).count()) // row
-                    builder.append("\n")
-                    builder.append(
-                        twoDArrayOfSingleRegex.findAll(currentInput).map {
-                            it.value.trim().removePrefix("[").removeSuffix("]").split(",").size
-                        }.max()
-                    ) // column
-                    builder.append("\n")
-                    builder.append(
-                        twoDArrayOfSingleRegex.findAll(currentInput).map { it.value }.joinToString("\n") {
-                            if(it.trim().equals("[]")) "$$$$$$$$$$" else it.trim().removePrefix("[").removeSuffix("]").split(",").joinToString(" ") { it.trim() }
-                        }
-                    )
-                } else {
-                    val twoDArrayOfStringRegex = Regex("""(\[(?:\s*,?\s*"[a-zA-Z0-9 .*%$#@!\-+=:;'()\[\]{}]*")*\s*])""")
-                    builder.append(twoDArrayOfStringRegex.findAll(currentInput).count()) // row
-                    builder.append("\n")
-                    builder.append(
-                        twoDArrayOfStringRegex.findAll(currentInput).map {
-                            it.value.trim().removePrefix("[").removeSuffix("]").split(",").size
-                        }.max()
-                    ) // column
-                    builder.append("\n")
-                    builder.append(
-                        twoDArrayOfStringRegex.findAll(currentInput).map { it.value }.joinToString("\n") {
-                            if(it.trim().equals("[]")) "$$$$$$$$$$" else it.trim().removePrefix("[").removeSuffix("]").split(",").joinToString(" ") { it.trim() }
-                        }
-                    )
-                }
-            } else if(is1DList(currentMask)) {
-                val inputs = currentInput.trim().removePrefix("[").removeSuffix("]").split(",")
-                builder.append("${inputs.size}\n")
-                builder.append(
-                    inputs.joinToString("\n") {
-                        if(isSingleType(currentMask)) {
-                            it.trim()
-                        } else {
-                            it.trim().removeSurrounding("\"")
+                if(isNonStringType(currentMask)) {
+                    val arrays = RegexPattern.ArraySingleRegex.findAll(currentInput).toList().map {
+                        it.value.removePrefix("[").removeSuffix("]")
+                    }
+                    builder.appendWithNewLine(arrays.count())
+                    arrays.forEach {
+                        val groups = RegexPattern.SingleRegex.findAll(it).toList().map { it.value }
+                        builder.appendWithNewLine(groups.count())
+                        if(groups.count() > 0) {
+                            builder.appendWithNewLine(groups.joinToString("\n"))
                         }
                     }
-                )
-            } else {
-                if(isStringType(currentMask)) {
-                    builder.append(""""$$currentInput"""")
-                } else {
-                    builder.append(currentInput)
+                } else if(isStringType(currentMask)) {
+                    val arrays = RegexPattern.ArrayStringRegex.findAll(currentInput).toList().map {
+                        it.value.removePrefix("[").removeSuffix("]")
+                    }
+                    builder.appendWithNewLine(arrays.count())
+                    arrays.forEach {
+                        val groups = RegexPattern.StringRegex.findAll(it).toList().map { it.value.removeSurrounding("\"") }
+                        builder.appendWithNewLine(groups.count())
+                        if(groups.count() > 0) {
+                            builder.appendWithNewLine(groups.joinToString("\n"))
+                        }
+                    }
+                }
+            } else if(is1DList(currentMask)) {
+                if(isNonStringType(currentMask)) {
+                    RegexPattern.ArraySingleRegex.findAll(currentInput).first().value.removePrefix("[").removeSuffix("]").also {
+                        val groups = RegexPattern.SingleRegex.findAll(it).toList().map { it.value }
+                        builder.appendWithNewLine(groups.count())
+                        if(groups.count() > 0) {
+                            builder.appendWithNewLine(groups.joinToString("\n"))
+                        }
+                    }
+                } else if(isStringType(currentMask)) {
+                    RegexPattern.ArrayStringRegex.findAll(currentInput).first().value.removePrefix("[").removeSuffix("]").also {
+                        val groups = RegexPattern.StringRegex.findAll(it).toList().map { it.value.removeSurrounding("\"") }
+                        builder.appendWithNewLine(groups.count())
+                        if(groups.count() > 0) {
+                            builder.appendWithNewLine(groups.joinToString("\n"))
+                        }
+                    }
+                }
+            } else if(isSingleType(currentMask)) {
+                if(isNonStringType(currentMask)) {
+                    RegexPattern.SingleRegex.findAll(currentInput).first().value.also {
+                        builder.appendWithNewLine(it)
+                    }
+                } else if(isStringType(currentMask)) {
+                    RegexPattern.StringRegex.findAll(currentInput).first().value.also {
+                        builder.appendWithNewLine(it.removeSurrounding("\""))
+                    }
                 }
             }
-
-            builder.append("\n")
         }
 
         return builder.toString()
     }
+
+    private fun StringBuilder.appendWithNewLine(s: Any) = append("$s\n")
 }

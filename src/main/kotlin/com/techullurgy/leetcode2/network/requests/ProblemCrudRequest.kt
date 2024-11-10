@@ -6,6 +6,7 @@ import com.techullurgy.leetcode2.domain.model.Difficulty
 import com.techullurgy.leetcode2.domain.model.TestcaseInputDetails
 
 data class ProblemCrudRequest(
+    val id: Int = 0,
     val title: String,
     val description: String,
     val difficulty: Difficulty,
