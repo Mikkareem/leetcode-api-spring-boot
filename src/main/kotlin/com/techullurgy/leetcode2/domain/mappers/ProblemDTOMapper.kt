@@ -7,7 +7,7 @@ import com.techullurgy.leetcode2.network.models.TestcaseInputModel
 import com.techullurgy.leetcode2.network.models.TestcaseModel
 
 fun Problem.toProblemDTO(language: ProgrammingLanguage) = ProblemDTO(
-    problemNo = problemNo,
+    problemNo = id,
     title = title,
     description = description,
     difficulty = difficulty,

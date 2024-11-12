@@ -7,8 +7,8 @@ fun Submission.toSubmissionDTO() = SubmissionDTO(
     id = id,
     language = language,
     code = code,
-    result = result,
+    result = verdict,
     time = time,
-    problem = problem.problemNo,
+    problem = problem.id,
     user = user
 )

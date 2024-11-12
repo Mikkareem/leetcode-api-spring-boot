@@ -96,7 +96,7 @@ class SpringBootTest1ApplicationTests {
 			userId = userId,
 			userCode = userCode,
 			language = ProgrammingLanguage.Java,
-			problemId = problem.problemNo,
+			problemId = problem.id,
 			testcases = problem.testcases.map { it.toProblemTestcase() }
 		)
 

@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SubmissionsRepository: JpaRepository<Submission, Int> {
-    @Query("SELECT s FROM Submission s WHERE s.problem.problemNo = :problemId AND s.user.id = :userId ORDER BY time DESC")
-    fun getAllSubmissionsForProblem(@Param("problemId") problemId: Int, @Param("userId") userId: Int): List<Submission>
+    fun findByProblemIdAndUserId(problemId: Int, userId: Int): List<Submission>
 }

@@ -14,7 +14,7 @@ import jakarta.persistence.OneToOne
 data class Problem(
     @Id
     @GeneratedValue
-    val problemNo: Int = 0,
+    val id: Int = 0,
     val title: String,
     val description: String,
     val difficulty: Difficulty,

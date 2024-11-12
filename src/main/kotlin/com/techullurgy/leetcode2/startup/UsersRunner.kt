@@ -3,9 +3,11 @@ package com.techullurgy.leetcode2.startup
 import com.techullurgy.leetcode2.data.entities.LeetcodeUser
 import com.techullurgy.leetcode2.data.repositories.UsersRepository
 import org.springframework.boot.CommandLineRunner
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
 @Component
+@Order(1)
 class UsersRunner(
     private val usersRepository: UsersRepository
 ): CommandLineRunner {

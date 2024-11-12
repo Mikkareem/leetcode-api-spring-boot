@@ -8,7 +8,9 @@ import com.techullurgy.leetcode2.domain.mappers.toProblemDTO
 import com.techullurgy.leetcode2.domain.mappers.toProblemListItem
 import com.techullurgy.leetcode2.domain.mappers.toProblemTestcase
 import com.techullurgy.leetcode2.domain.mappers.toSubmissionDTO
+import com.techullurgy.leetcode2.domain.model.CodeSubmissionResult
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
+import com.techullurgy.leetcode2.domain.model.TestcaseResult
 import com.techullurgy.leetcode2.domain.services.CodeExecutionService
 import com.techullurgy.leetcode2.network.models.TestcaseResultDTO
 import com.techullurgy.leetcode2.network.requests.CodeRequest
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import kotlin.jvm.optionals.getOrNull
+import kotlin.random.Random
 
 @RestController
 class AlgorithmsController(
@@ -49,7 +53,7 @@ class AlgorithmsController(
     fun getProblemByIdForTheUser(@PathVariable("problemNo") problemNo: Int): ResponseEntity<ProblemByIdResponse> {
         val user: LeetcodeUser = userRepository.findById(1).get()
         val problem = problemRepository.findById(problemNo).get().toProblemDTO(ProgrammingLanguage.Java)
-        val submissions = submissionsRepository.getAllSubmissionsForProblem(problem.problemNo, user.id).map { it.toSubmissionDTO() }
+        val submissions = submissionsRepository.findByProblemIdAndUserId(problem.problemNo, user.id).map { it.toSubmissionDTO() }
 
         return ResponseEntity.ok(ProblemByIdResponse(problem, submissions, user))
     }
@@ -78,28 +82,30 @@ class AlgorithmsController(
 
         val executableTestcases = codeRequest.sampleTestcases
 
-        val results = codeExecutionService.executeFor(
-            userId = userId,
-            problemId = problemNo,
-            userCode = codeRequest.userCode,
-            language = codeRequest.language,
-            testcases = executableTestcases.map { it.toProblemTestcase() }
-        )
+//        val results = codeExecutionService.executeFor(
+//            userId = userId,
+//            problemId = problemNo,
+//            userCode = codeRequest.userCode,
+//            language = codeRequest.language,
+//            testcases = executableTestcases.map { it.toProblemTestcase() }
+//        )
 
-//        val result2 = codeRequest.sampleTestcases.mapIndexed { index, it ->
-//            TestcaseResult(
-//                testcase = it.toProblemTestcase(),
-//                expectedResult = "${index + Random.nextInt()}",
-//                yourResult = "${index + Random.nextInt()}",
-//                stdout = "",
-//                result = CodeSubmissionResult.Accepted
-//            )
-//        }
+        Thread.sleep(5000)
+
+        val result2 = codeRequest.sampleTestcases.mapIndexed { index, it ->
+            TestcaseResult(
+                testcase = it.toProblemTestcase(),
+                expectedResult = "${index + Random.nextInt()}",
+                yourResult = "${index + Random.nextInt()}",
+                stdout = "",
+                result = CodeSubmissionResult.Accepted
+            )
+        }
 
         return ResponseEntity.ok(
             RunResultResponse(
                 problemId = problemNo,
-                results = results.map { r ->
+                results = result2.map { r ->
                     TestcaseResultDTO(
                         testcase = executableTestcases.first { it.id == r.testcase.id },
                         expectedResult = r.expectedResult,
@@ -110,5 +116,40 @@ class AlgorithmsController(
                 }
             )
         )
+    }
+
+    fun submitCodeForTheProblemForTheUser(
+        @PathVariable("problemNo") problemNo: Int,
+        @RequestBody codeRequest: CodeRequest
+    ) {
+        val userId = "laksd9832kjshkd"
+
+        val problem = problemRepository.findById(problemNo).getOrNull() ?: return
+
+        val executableTestcases = (codeRequest.sampleTestcases.map { it.toProblemTestcase() } +
+                problem.testcases.filter { it.isHidden == true }.map { it.toProblemTestcase() }).toSet().toList()
+
+        val results = codeExecutionService.executeFor(
+            userId = userId,
+            problemId = problemNo,
+            userCode = codeRequest.userCode,
+            language = codeRequest.language,
+            testcases = executableTestcases
+        )
+
+        val executedTestcasesCount = results.count { it.result != CodeSubmissionResult.NotExecuted }
+        val totalTestcasesCount = results.count()
+
+        val executedResults = results.filter { it.result != CodeSubmissionResult.NotExecuted }
+
+        val verdict = if(executedResults.any { it.result != CodeSubmissionResult.Accepted }) {
+            executedResults.first { it.result != CodeSubmissionResult.Accepted  }.result
+        } else CodeSubmissionResult.Accepted
+
+        if(verdict == CodeSubmissionResult.Accepted) {
+
+        } else {
+
+        }
     }
 }

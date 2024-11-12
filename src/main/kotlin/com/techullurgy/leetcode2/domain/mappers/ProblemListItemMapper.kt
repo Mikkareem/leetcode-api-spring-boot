@@ -4,7 +4,7 @@ import com.techullurgy.leetcode2.data.entities.Problem
 import com.techullurgy.leetcode2.network.models.ProblemListItem
 
 fun Problem.toProblemListItem() = ProblemListItem(
-    problemNo = problemNo,
+    problemNo = id,
     problemName = title,
     problemDifficulty = difficulty
 )

@@ -13,9 +13,11 @@ import com.techullurgy.leetcode2.domain.model.TestcaseInputType
 import com.techullurgy.leetcode2.network.models.TestcaseInputModel
 import com.techullurgy.leetcode2.network.models.TestcaseModel
 import org.springframework.boot.CommandLineRunner
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
 @Component
+@Order(2)
 class ProblemsRunner(
     private val problemsRepository: ProblemsRepository,
 ): CommandLineRunner {
