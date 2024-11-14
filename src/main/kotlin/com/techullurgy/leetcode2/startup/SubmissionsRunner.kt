@@ -51,7 +51,7 @@ class SubmissionsRunner(
             user = user2,
             wrongAnswerProps = WrongAnswerProps(
                 totalTestcases = 46,
-                passedTestcases = 23,
+                executedTestcases = 23,
                 failedTestcase = FailedTestcase(
                     expectedOutput = "167",
                     stdout = "Hello",
@@ -73,7 +73,7 @@ class SubmissionsRunner(
             user = user1,
             wrongAnswerProps = WrongAnswerProps(
                 totalTestcases = 46,
-                passedTestcases = 23,
+                executedTestcases = 23,
                 failedTestcase = FailedTestcase(
                     expectedOutput = "167",
                     stdout = "Hello world",

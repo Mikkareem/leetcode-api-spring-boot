@@ -1,5 +1,6 @@
 package com.techullurgy.leetcode2.domain.services
 
+import com.techullurgy.leetcode2.domain.model.CodeExecutionType
 import com.techullurgy.leetcode2.domain.model.ProblemTestcase
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import com.techullurgy.leetcode2.domain.model.TestcaseResult
@@ -17,10 +18,11 @@ class CodeExecutionService(
         problemId: Int,
         userCode: String,
         language: ProgrammingLanguage,
-        testcases: List<ProblemTestcase>
+        testcases: List<ProblemTestcase>,
+        executionType: CodeExecutionType
     ): List<TestcaseResult> {
         return UserFileCreator(userId, language.usage).use {
-            val results = executeCode(userId, problemId, userCode, language, testcases)
+            val results = executeCode(userId, problemId, userCode, language, testcases, executionType)
             generateResults(it.file, testcases, results)
         }
     }

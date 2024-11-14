@@ -4,6 +4,7 @@ import com.techullurgy.leetcode2.data.entities.LeetcodeUser
 import com.techullurgy.leetcode2.data.repositories.ProblemsRepository
 import com.techullurgy.leetcode2.data.repositories.UsersRepository
 import com.techullurgy.leetcode2.domain.mappers.toProblemTestcase
+import com.techullurgy.leetcode2.domain.model.CodeExecutionType
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import com.techullurgy.leetcode2.domain.services.CodeExecutionService
 import com.techullurgy.leetcode2.domain.services.UserFileCreator
@@ -97,7 +98,8 @@ class SpringBootTest1ApplicationTests {
 			userCode = userCode,
 			language = ProgrammingLanguage.Java,
 			problemId = problem.id,
-			testcases = problem.testcases.map { it.toProblemTestcase() }
+			testcases = problem.testcases.map { it.toProblemTestcase() },
+			executionType = CodeExecutionType.RUN
 		)
 
 		println(results)

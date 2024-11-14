@@ -1,6 +1,7 @@
 package com.techullurgy.leetcode2.domain.usecases
 
 import com.techullurgy.leetcode2.domain.model.CodeExecutionResult
+import com.techullurgy.leetcode2.domain.model.CodeExecutionType
 import com.techullurgy.leetcode2.domain.model.ProblemTestcase
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import org.springframework.stereotype.Component
@@ -9,7 +10,12 @@ import org.springframework.stereotype.Component
 class ExecuteForResultsUseCase(
     private val executeDockerImage: ExecuteDockerImageUseCase
 ) {
-    operator fun invoke(language: ProgrammingLanguage, imageName: String, testcases: List<ProblemTestcase>): Array<CodeExecutionResult> {
+    operator fun invoke(
+        language: ProgrammingLanguage,
+        imageName: String,
+        testcases: List<ProblemTestcase>,
+        executionType: CodeExecutionType
+    ): Array<CodeExecutionResult> {
         val results = Array<CodeExecutionResult>(testcases.size) { CodeExecutionResult.NotExecuted }
 
         for (index in testcases.indices) {
@@ -27,7 +33,9 @@ class ExecuteForResultsUseCase(
                     results[index] = CodeExecutionResult.RuntimeError(result.second)
                     break
                 }
-//                break
+                if(executionType == CodeExecutionType.SUBMIT) {
+                    break
+                }
             }
         }
 

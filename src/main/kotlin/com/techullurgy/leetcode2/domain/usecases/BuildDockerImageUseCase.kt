@@ -6,22 +6,23 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class BuildDockerImageUseCase {
-    operator fun invoke(userId: String, filePath: String): String {
+    operator fun invoke(userId: String, filePath: String): Pair<Boolean, String> {
         val imageName = "my-image-${userId}"
         val builder = ProcessBuilder("docker", "build", "-t", imageName, filePath)
         val process = builder.start()
         val isNotAborted = process.waitFor(10, TimeUnit.SECONDS)
 
-        if (isNotAborted) {
+        return if (isNotAborted) {
             if (process.exitValue() == 0) {
                 println("$imageName Docker image created successfully")
+                true to imageName
             } else {
                 process.debug()
+                false to imageName
             }
         } else {
             process.debug()
+            false to imageName
         }
-
-        return imageName
     }
 }

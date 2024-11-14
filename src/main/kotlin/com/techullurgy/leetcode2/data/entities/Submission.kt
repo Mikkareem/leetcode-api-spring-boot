@@ -55,7 +55,7 @@ data class WrongAnswerProps(
     @GeneratedValue
     val id: Long = 0,
     val totalTestcases: Int,
-    val passedTestcases: Int,
+    val executedTestcases: Int,
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "failed_testcase_id")

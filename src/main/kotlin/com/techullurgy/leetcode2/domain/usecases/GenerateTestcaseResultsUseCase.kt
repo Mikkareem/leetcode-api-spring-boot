@@ -14,10 +14,6 @@ class GenerateTestcaseResultsUseCase {
         return results.mapIndexed { index, it ->
             val currentTestcase = testcases[index]
 
-            val expectedResult = FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/eResult${currentTestcase.id}.txt")
-            val yourResult = FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/result${currentTestcase.id}.txt")
-            val stdout = FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/output${currentTestcase.id}.txt")
-
             val result = when(it) {
                 CodeExecutionResult.Accepted -> CodeSubmissionResult.Accepted
                 is CodeExecutionResult.CompilationError -> CodeSubmissionResult.CompilationError
@@ -26,6 +22,16 @@ class GenerateTestcaseResultsUseCase {
                 CodeExecutionResult.WrongAnswer -> CodeSubmissionResult.WrongAnswer
                 else -> CodeSubmissionResult.NotExecuted
             }
+
+            val expectedResult = if(result.isResultExists()) {
+                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/eResult${currentTestcase.id}.txt")
+            } else ""
+            val yourResult = if(result.isResultExists()) {
+                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/result${currentTestcase.id}.txt")
+            } else ""
+            val stdout = if(result.isResultExists()) {
+                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/output${currentTestcase.id}.txt")
+            } else ""
 
             TestcaseResult(
                 testcase = currentTestcase,

@@ -1,6 +1,7 @@
 package com.techullurgy.leetcode2.domain.usecases
 
 import com.techullurgy.leetcode2.domain.model.CodeExecutionResult
+import com.techullurgy.leetcode2.domain.model.CodeExecutionType
 import com.techullurgy.leetcode2.domain.model.ProblemTestcase
 import com.techullurgy.leetcode2.domain.model.ProgrammingLanguage
 import org.springframework.stereotype.Component
@@ -20,7 +21,8 @@ class CodeExecutionUseCase(
         problemId: Int,
         userCode: String,
         language: ProgrammingLanguage,
-        testcases: List<ProblemTestcase>
+        testcases: List<ProblemTestcase>,
+        executionType: CodeExecutionType
     ): List<CodeExecutionResult> {
 
         val (inputFilePath, fileName) = generateInputFile(userId, problemId, userCode, language)
@@ -29,14 +31,19 @@ class CodeExecutionUseCase(
 
         createDockerFile(language, inputFilePath, fileName)
 
-        val imageName = buildDockerImage(userId, inputFilePath)
+        val (isCreated, imageName) = buildDockerImage(userId, inputFilePath)
 
-        val results = executeForResults(language, imageName, testcases)
+        val results = if(isCreated) {
+            val results = executeForResults(language, imageName, testcases, executionType)
+            results.toList().filter { it !is CodeExecutionResult.NotExecuted }
+        } else {
+            listOf(CodeExecutionResult.CompilationError(""))
+        }
 
         deleteDockerImage(imageName)
 
         deleteDockerFile(inputFilePath)
 
-        return results.toList().filter { it !is CodeExecutionResult.NotExecuted }
+        return results
     }
 }
